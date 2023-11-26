@@ -25,27 +25,34 @@ public class ChessMath {
 	
 	private void initialSetup() {
 		System.out.println("Inicial Setup");
-		placeNewPiece('C', 1, new Rook(board, Color.White));
-        placeNewPiece('C', 2, new Rook(board, Color.White));
-        placeNewPiece('D', 2, new Rook(board, Color.White));
-        placeNewPiece('E', 2, new Rook(board, Color.White));
-        placeNewPiece('E', 1, new Rook(board, Color.White));
-        placeNewPiece('D', 1, new King(board, Color.White));
-        placeNewPiece('C', 7, new Rook(board, Color.Black));
-        placeNewPiece('C', 8, new Rook(board, Color.Black));
-        placeNewPiece('D', 7, new Rook(board, Color.Black));
-        placeNewPiece('E', 7, new Rook(board, Color.Black));
-        placeNewPiece('E', 8, new Rook(board, Color.Black));
-        placeNewPiece('D', 8, new King(board, Color.Black));
+		placeNewPiece('c', 1, new Rook(board, Color.White));
+        placeNewPiece('c', 2, new Rook(board, Color.White));
+        placeNewPiece('d', 2, new Rook(board, Color.White));
+        placeNewPiece('e', 2, new Rook(board, Color.White));
+        placeNewPiece('e', 1, new Rook(board, Color.White));
+        placeNewPiece('d', 1, new King(board, Color.White));
+        placeNewPiece('c', 7, new Rook(board, Color.Black));
+        placeNewPiece('c', 8, new Rook(board, Color.Black));
+        placeNewPiece('d', 7, new Rook(board, Color.Black));
+        placeNewPiece('e', 7, new Rook(board, Color.Black));
+        placeNewPiece('e', 8, new Rook(board, Color.Black));
+        placeNewPiece('d', 8, new King(board, Color.Black));
 	}
 	private void placeNewPiece(char column,int row, ChessPiece piece) {
 		board.placePiece(piece, new ChessPosition(column, row).toPosition());
 		
 	}
+	
+	public boolean[][] possibleMoves(ChessPosition sourcePosition) {
+		Position position = sourcePosition.toPosition();
+		validateSourcePosition(position);
+		return board.piece(position).possibleMoves();
+	}
 	public ChessPiece performChessMove(ChessPosition sourcePosition,ChessPosition targetPosition) {
 		Position source = sourcePosition.toPosition();
 		Position target = targetPosition.toPosition();
 		validateSourcePosition(source);
+		validateTargetPosition(source,target);
 		Piece capturedPiece = makeMove(source,target);
 		
 		return (ChessPiece) capturedPiece;
@@ -61,6 +68,14 @@ public class ChessMath {
 	private void validateSourcePosition(Position position) {
 		if(!board.thereIsAPiece(position)) {
 			throw new ChessException("There is no piece on source position");
+		}
+		if(!board.piece(position).isThereAnyPossibleMove()){
+			throw new ChessException("There is no possible moves for the chosen pieces");
+		}
+	}
+	private void validateTargetPosition(Position source, Position target) {
+		if (!board.piece(source).possibleMove(target)) {
+			throw new ChessException("The chosen piece can't move to target position");
 		}
 	}
 }
