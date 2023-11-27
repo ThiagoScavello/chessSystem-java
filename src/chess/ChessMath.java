@@ -1,5 +1,8 @@
 package chess;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import boardgame.Board;
 import boardgame.Piece;
 import boardgame.Position;
@@ -10,6 +13,9 @@ public class ChessMath {
 	private int turn;
 	private Color currentPlayer;
 	private Board board;
+	
+	private List<Piece> piecesOnTheBoard = new ArrayList<>();
+	private List<Piece> capturedPieces = new ArrayList<>();
 
 	public ChessMath() {
 		board = new Board(8, 8);
@@ -18,11 +24,12 @@ public class ChessMath {
 
 		initialSetup();
 	}
-	
+
 	public int getTurn() {
 		return turn;
 	}
-	public Color getCurrentPlayer(){
+
+	public Color getCurrentPlayer() {
 		return currentPlayer;
 	}
 
@@ -35,6 +42,7 @@ public class ChessMath {
 		}
 		return mat;
 	}
+
 	private void nextTurn() {
 		turn++;
 		currentPlayer = (currentPlayer == Color.White) ? Color.Black : Color.White;
@@ -58,6 +66,7 @@ public class ChessMath {
 
 	private void placeNewPiece(char column, int row, ChessPiece piece) {
 		board.placePiece(piece, new ChessPosition(column, row).toPosition());
+		piecesOnTheBoard.add(piece);
 
 	}
 
@@ -82,6 +91,11 @@ public class ChessMath {
 		Piece p = board.removePiece(source);
 		Piece capturedPiece = board.removePiece(target);
 		board.placePiece(p, target);
+		if(capturedPiece != null) {
+			piecesOnTheBoard.remove(capturedPiece);
+			capturedPieces.add(capturedPiece);
+			
+		}
 		return capturedPiece;
 	}
 
@@ -89,7 +103,7 @@ public class ChessMath {
 		if (!board.thereIsAPiece(position)) {
 			throw new ChessException("There is no piece on source position");
 		}
-		if (currentPlayer != ((ChessPiece)board.piece(position)).getColor()) {
+		if (currentPlayer != ((ChessPiece) board.piece(position)).getColor()) {
 			throw new ChessException("The chosen piece is not yours");
 		}
 		if (!board.piece(position).isThereAnyPossibleMove()) {
