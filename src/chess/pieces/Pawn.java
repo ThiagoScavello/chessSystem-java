@@ -44,7 +44,7 @@ public class Pawn extends ChessPiece {
 			if (getBoard().positionExists(p) && isThereOpponentPiece(p)) {
 				mat[p.getRow()][p.getColumn()] = true;
 			}
-			// Especialmove en passant White
+			// Special move en passant -  White
 			if (position.getRow() == 3) {
 				Position left = new Position(position.getRow(), position.getColumn() - 1);
 				if (getBoard().positionExists(left) && isThereOpponentPiece(left)
@@ -78,7 +78,7 @@ public class Pawn extends ChessPiece {
 			if (getBoard().positionExists(p) && isThereOpponentPiece(p)) {
 				mat[p.getRow()][p.getColumn()] = true;
 			}
-			// Especialmove en passant Black
+			// Special move en passant - Black
 			if (position.getRow() == 4) {
 				Position left = new Position(position.getRow(), position.getColumn() - 1);
 				if (getBoard().positionExists(left) && isThereOpponentPiece(left)
@@ -92,8 +92,6 @@ public class Pawn extends ChessPiece {
 					mat[right.getRow() + 1][right.getColumn()] = true;
 				}
 			}
-			
-			
 
 		}
 		return mat;
